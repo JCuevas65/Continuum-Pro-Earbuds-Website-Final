@@ -639,7 +639,11 @@
 
                 signInWithPopup(auth, provider).catch(err => {
                     console.error("Link error", err);
-                    showAuthError(err.message);
+                    if (err.code === 'auth/popup-closed-by-user') {
+                        showAuthError("Sign-in window was closed. Please try again.");
+                    } else {
+                        showAuthError(err.message);
+                    }
                 });
             } else {
                const emailInput = document.querySelector('#auth-content input[type="email"]');
