@@ -466,17 +466,17 @@
         import { getFirestore, doc, getDocFromServer } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
         const firebaseConfig = {
-          apiKey: "AIzaSyB1RW5gbUvCk4r-ysO2biWAlIgerzF6fg0",
-          authDomain: "gen-lang-client-0090640614.firebaseapp.com",
-          projectId: "gen-lang-client-0090640614",
-          storageBucket: "gen-lang-client-0090640614.firebasestorage.app",
-          messagingSenderId: "671927668754",
-          appId: "1:671927668754:web:e1d960f90f3575295c48cb"
+          apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyB1RW5gbUvCk4r-ysO2biWAlIgerzF6fg0",
+          authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "gen-lang-client-0090640614.firebaseapp.com",
+          projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "gen-lang-client-0090640614",
+          storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "gen-lang-client-0090640614.firebasestorage.app",
+          messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "671927668754",
+          appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:671927668754:web:e1d960f90f3575295c48cb"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const db = getFirestore(app, "ai-studio-7992850b-2402-4ff2-8229-a1475fcb36c6");
+        const db = getFirestore(app, import.meta.env.VITE_FIREBASE_DATABASE_ID || "ai-studio-7992850b-2402-4ff2-8229-a1475fcb36c6");
 
         // Test Connection as per guidelines
         async function testConnection() {
@@ -629,6 +629,14 @@
             console.log(`Signing in via ${method}`);
             if (method === 'google') {
                 const provider = new GoogleAuthProvider();
+                // Pass the Web Client ID if provided to help with Vercel/Custom Domain auth issues
+                const clientId = import.meta.env.VITE_FIREBASE_WEB_CLIENT_ID || "918322916759-ajf9s730usimb6ckq8d4uqu5kku9r8ak.apps.googleusercontent.com";
+                if (clientId) {
+                    provider.setCustomParameters({
+                        'client_id': clientId
+                    });
+                }
+
                 signInWithPopup(auth, provider).catch(err => {
                     console.error("Link error", err);
                     showAuthError(err.message);
