@@ -4,7 +4,8 @@ import { createServer as createViteServer } from "vite";
 import admin from "firebase-admin";
 
 // Initialize Firebase Admin
-// Best practice: Use an environment variable for the service account JSON
+// This is the Node.js equivalent of the Java initialization (FileInputStream -> GoogleCredentials)
+// We prefer using an environment variable for the service account object in this environment.
 const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
 
 if (serviceAccountKey) {
@@ -13,12 +14,12 @@ if (serviceAccountKey) {
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount)
     });
-    console.log("Firebase Admin initialized successfully.");
+    console.log("Firebase Admin (Node.js SDK) initialized successfully.");
   } catch (error) {
     console.error("Failed to parse FIREBASE_SERVICE_ACCOUNT_KEY:", error);
   }
 } else {
-  console.warn("FIREBASE_SERVICE_ACCOUNT_KEY not found. Firebase Admin features will be unavailable.");
+  console.warn("FIREBASE_SERVICE_ACCOUNT_KEY not found. Please provide your serviceAccountKey.json as a JSON string in this environment variable.");
 }
 
 async function startServer() {
