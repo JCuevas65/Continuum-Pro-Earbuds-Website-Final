@@ -481,7 +481,7 @@
         // Test Connection as per guidelines
         async function testConnection() {
             try {
-                await getDocFromServer(doc(db, 'test_connection', 'ping'));
+                await getDocFromServer(doc(db, 'connection_test', 'ping'));
                 console.log("Firebase connection established.");
             } catch (error) {
                 console.warn("Firebase connection test failed (expected if rules deny or collection missing):", error.message);
@@ -638,9 +638,13 @@
                 }
 
                 signInWithPopup(auth, provider).catch(err => {
-                    console.error("Link error", err);
+                    console.error("Auth error:", err);
                     if (err.code === 'auth/popup-closed-by-user') {
-                        showAuthError("Sign-in window was closed. Please try again.");
+                        showAuthError("Sign-in window closed. Please ensure popups are allowed and try again.");
+                    } else if (err.code === 'auth/cancelled-by-user') {
+                        showAuthError("Sign-in was cancelled.");
+                    } else if (err.code === 'auth/popup-blocked') {
+                        showAuthError("Sign-in popup was blocked. Please enable popups for this site.");
                     } else {
                         showAuthError(err.message);
                     }

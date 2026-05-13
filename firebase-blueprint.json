@@ -10,12 +10,24 @@
         "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["email"]
+    },
+    "heartbeat": {
+      "title": "Heartbeat",
+      "description": "Simple object for connection testing",
+      "type": "object",
+      "properties": {
+        "status": { "type": "string" }
+      }
     }
   },
   "firestore": {
     "users/{userId}": {
       "schema": "users",
       "description": "User profiles"
+    },
+    "connection_test/{docId}": {
+      "schema": "heartbeat",
+      "description": "Public path for connection health checks"
     }
   }
 }
