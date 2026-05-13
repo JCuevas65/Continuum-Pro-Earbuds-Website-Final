@@ -103,7 +103,7 @@
     <main id="home" class="page active">
         <section class="h-screen w-full relative overflow-hidden flex items-center px-6 md:px-20">
             <!-- Background Image -->
-            <img src="athlete_tunnel.png" alt="Celeb Wearing Continuum" class="absolute inset-0 w-full h-full object-cover z-0 grayscale">
+            <img src="athlete_tunnel.png" alt="Celeb Wearing Continuum" class="absolute inset-0 w-full h-full object-cover z-0">
             <div class="absolute inset-0 bg-white/20 z-10"></div>
             
             <div class="relative z-20 max-w-4xl">
@@ -160,12 +160,12 @@
                             </div>
                         </div>
                     </div>
-                    <img src="earbuds_modular.png" alt="Exploded View" class="w-full grayscale brightness-95">
+                    <img src="earbuds_modular.png" alt="Exploded View" class="w-full brightness-95">
                 </div>
 
                 <!-- Philosophy Section -->
                 <div class="grid md:grid-cols-2 gap-20 items-center mb-40">
-                    <img src="earbuds_stack.png" alt="Materials" class="w-full grayscale order-2 md:order-1">
+                    <img src="earbuds_stack.png" alt="Materials" class="w-full order-2 md:order-1">
                     <div class="order-1 md:order-2">
                         <h3 class="text-4xl font-black tracking-tighter mb-6 underline decoration-4">MATERIAL INTEGRITY.</h3>
                         <p class="text-xl leading-relaxed opacity-70">We believe in substances that matter. Our Alloy Pro variant uses aerospace-grade magnesium, while the Eco Core utilizes ocean-bound plastic transformed into premium acoustic housing.</p>
@@ -178,7 +178,7 @@
                         <h3 class="text-4xl font-black tracking-tighter mb-6 underline decoration-4">MODULAR CIRCULARITY.</h3>
                         <p class="text-xl leading-relaxed opacity-70">Continuum products are designed to be repaired, not replaced. Our modular architecture allows for individual component swaps, ensuring your hardware stays eternal alongside our software updates.</p>
                     </div>
-                    <img src="earbuds_white_exposed.png" alt="Modular Repair" class="w-full grayscale">
+                    <img src="earbuds_white_exposed.png" alt="Modular Repair" class="w-full">
                 </div>
             </div>
         </section>
@@ -193,7 +193,7 @@
                         <h2 class="text-xs font-bold tracking-[0.5em] uppercase mb-2">Your Bag</h2>
                         <h1 class="text-7xl font-black tracking-tighter">READY TO ETERNALIZE?</h1>
                     </div>
-                    <img src="earbuds_case_top.png" alt="Checkout" class="w-32 h-32 object-cover grayscale border border-black/10">
+                    <img src="earbuds_case_top.png" alt="Checkout" class="w-32 h-32 object-cover border border-black/10">
                 </header>
 
                 <div class="grid md:grid-cols-3 gap-12">
@@ -205,7 +205,7 @@
                     </div>
 
                     <div class="bg-black/5 p-8 h-fit">
-                        <div class="mb-8 overflow-hidden rounded-sm grayscale">
+                        <div class="mb-8 overflow-hidden rounded-sm">
                             <img src="earbuds_case_top.png" alt="Checkout Summary" class="w-full aspect-[16/6] object-cover">
                         </div>
                         <h3 class="text-xl font-bold mb-6 uppercase tracking-tighter">Summary</h3>
@@ -405,7 +405,7 @@
     <!-- Contact Page -->
     <main id="contact" class="page">
         <section class="max-w-4xl mx-auto px-6 py-20 min-h-screen text-center">
-            <div class="w-full grayscale border border-black/5 mb-20 overflow-hidden">
+            <div class="w-full border border-black/5 mb-20 overflow-hidden">
                 <img src="earbuds_stack.png" alt="Philosophy Elements" class="w-full aspect-video object-cover transition-transform duration-700 hover:scale-105">
             </div>
 
@@ -692,7 +692,7 @@
             container.innerHTML = products.map(p => `
                 <div class="product-card group cursor-pointer border border-black/5 p-8 hover:border-black/20 transition-all flex flex-col h-full">
                     <div class="aspect-square mb-8 overflow-hidden bg-neutral-50 relative">
-                        <img src="${p.img}" alt="${p.name}" class="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all">
+                        <img src="${p.img}" alt="${p.name}" class="w-full h-full object-contain transition-all">
                         <div class="absolute inset-0 bg-white/5 group-hover:bg-transparent transition-all"></div>
                     </div>
                     <div class="flex-1">
@@ -759,7 +759,7 @@
                 const product = products.find(p => p.id === cartItem.id);
                 return `
                     <div class="flex gap-6 items-center border-b border-black/5 pb-8">
-                        <img src="${product.img}" class="w-24 h-24 object-contain bg-neutral-50 grayscale">
+                        <img src="${product.img}" class="w-24 h-24 object-contain bg-neutral-50">
                         <div class="flex-1">
                             <h4 class="font-black text-xl tracking-tighter uppercase">${product.name}</h4>
                             <p class="text-xs opacity-50 uppercase tracking-widest">${product.desc}</p>
@@ -888,7 +888,7 @@
                 const product = products.find(p => p.id === cartItem.id);
                 return `
                     <div class="flex gap-4 items-center border-b border-black/5 pb-4">
-                        <img src="${product.img}" class="w-16 h-16 object-contain bg-neutral-50 grayscale">
+                        <img src="${product.img}" class="w-16 h-16 object-contain bg-neutral-50">
                         <div class="flex-1">
                             <h4 class="font-bold text-sm tracking-tighter uppercase">${product.name}</h4>
                             <p class="text-[0.6rem] opacity-50 uppercase tracking-widest">Qty: ${cartItem.quantity}</p>
