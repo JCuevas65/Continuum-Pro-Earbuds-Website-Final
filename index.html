@@ -639,15 +639,21 @@
 
                 signInWithPopup(auth, provider).catch(err => {
                     console.error("Auth error:", err);
+                    let displayMsg = err.message;
+                    
                     if (err.code === 'auth/popup-closed-by-user') {
-                        showAuthError("Sign-in window closed. Please ensure popups are allowed and try again.");
+                        displayMsg = "The sign-in window was closed before completion. Please try again.";
                     } else if (err.code === 'auth/cancelled-by-user') {
-                        showAuthError("Sign-in was cancelled.");
+                        displayMsg = "Sign-in was cancelled.";
                     } else if (err.code === 'auth/popup-blocked') {
-                        showAuthError("Sign-in popup was blocked. Please enable popups for this site.");
-                    } else {
-                        showAuthError(err.message);
+                        displayMsg = "The sign-in popup was blocked by your browser. Please enable popups for this site.";
+                    } else if (err.code === 'auth/cancelled-popup-request') {
+                        displayMsg = "Multiple sign-in attempts detected. Please wait for the previous window or try once more.";
+                    } else if (err.code === 'auth/network-request-failed') {
+                        displayMsg = "Network error. Please check your connection and try again.";
                     }
+                    
+                    showAuthError(displayMsg);
                 });
             } else {
                const emailInput = document.querySelector('#auth-content input[type="email"]');
