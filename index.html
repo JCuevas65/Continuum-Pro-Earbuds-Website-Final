@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Continuum | Stay Eternal</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=AWLxLC7WDSgE6soqFKTa7zNyg6v53C12Bi_-s3ySmqE0B_savtK40HDf18CFyQjxZR_0T6I0ihZ3bfAF&currency=USD"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,900;1,900&display=swap" rel="stylesheet">
     <style>
         body { 
@@ -361,12 +363,15 @@
                     <h1 class="text-7xl font-black tracking-tighter">SECURE PAYMENT.</h1>
                 </header>
 
-                <div class="space-y-6">
-                    <button onclick="completeOrder(false)" class="w-full bg-[#0070BA] text-white p-6 font-black uppercase tracking-widest text-sm flex items-center justify-center gap-4 hover:bg-[#005ea6] transition-all">
-                        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M20.067 8.178c-.622-2.184-2.158-3.08-4.434-3.08h-6.73c-.534 0-.986.392-1.066.92L6.037 17.51a.63.63 0 00.622.723h2.617c.534 0 .986-.395 1.066-.923L11.16 11.83c.08-.528.532-.922 1.066-.922h1.666c3.2 0 5.466-1.383 6.177-4.73zm-3.523.51c-.131.62-.486 1.4-1.3 1.4h-1.637c-.312 0-.58.232-.627.533l-.478 3.033a.138.138 0 01-.137.117h-1.65a.138.138 0 01-.138-.158l.78-4.945a.631.631 0 01.623-.53h1.761c.427 0 .762.064 1.01.192.35.18.544.47.538.798a.723.723 0 01-.043.56z"/></svg>
-                        Pay Now with PayPal
-                    </button>
-                    <button onclick="completeOrder(true)" class="w-full border-2 border-black p-6 font-black uppercase tracking-widest text-sm hover:bg-black hover:text-white transition-all">
+                <div class="space-y-12">
+                    <div id="paypal-button-container" class="w-full max-w-md mx-auto"></div>
+                    
+                    <div class="relative py-4 flex items-center justify-center">
+                        <div class="absolute w-full h-[1px] bg-black/5"></div>
+                        <span class="relative bg-white px-4 text-[0.6rem] uppercase tracking-widest text-black/20">or simulate</span>
+                    </div>
+
+                    <button onclick="completeOrder(true)" class="w-full border-2 border-black p-4 font-black uppercase tracking-widest text-xs hover:bg-black hover:text-white transition-all max-w-md mx-auto block">
                         Simulate Payment (Bypass)
                     </button>
                 </div>
@@ -571,6 +576,10 @@
                 const emailInput = document.getElementById('ship-email');
                 if (nameInput) nameInput.value = shippingDetails.name;
                 if (emailInput) emailInput.value = shippingDetails.email;
+            }
+
+            if (id === 'checkout-payment') {
+                initPayPal();
             }
 
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -890,16 +899,63 @@
             }).join('');
         }
 
-        function completeOrder(simulated) {
-            if (!simulated) {
-                // Real payment attempt
+        function initPayPal() {
+            const container = document.getElementById('paypal-button-container');
+            if (!container || container.children.length > 0) return;
+
+            if (window.paypal) {
+                paypal.Buttons({
+                    createOrder: function(data, actions) {
+                        const subtotal = cart.reduce((acc, cartItem) => {
+                            const product = products.find(p => p.id === cartItem.id);
+                            return acc + (product.price * cartItem.quantity);
+                        }, 0);
+                        const tax = subtotal * 0.10;
+                        const discount = (subtotal + tax) * (discountPct / 100);
+                        const total = subtotal + tax - discount;
+
+                        return actions.order.create({
+                            purchase_units: [{
+                                amount: {
+                                    value: total.toFixed(2),
+                                    currency_code: 'USD'
+                                },
+                                description: 'Continuum Audio Products Purchase'
+                            }]
+                        });
+                    },
+                    onApprove: function(data, actions) {
+                        return actions.order.capture().then(function(details) {
+                            console.log('Capture result', details);
+                            completeOrder(false, details.payer.name.given_name);
+                        });
+                    },
+                    onError: function(err) {
+                        console.error('PayPal Error', err);
+                        alert('PayPal payment failed. Please try again.');
+                    },
+                    style: {
+                        layout: 'vertical',
+                        color:  'black',
+                        shape:  'rect',
+                        label:  'pay'
+                    }
+                }).render('#paypal-button-container');
+            } else {
+                container.innerHTML = '<p class="text-xs font-bold text-red-600">PayPal SDK failed to load. Check your internet connection or Client ID.</p>';
+            }
+        }
+
+        function completeOrder(simulated, payerName) {
+            if (!simulated && !payerName) {
+                // This branch shouldn't really be hit with official SDK buttons now
                 window.open('https://paypal.me/continuumlabs', '_blank');
             }
             
             // Random Order ID
             const orderNum = 'CTM-' + Math.floor(1000 + Math.random() * 9000);
             document.getElementById('order-id').innerText = '#' + orderNum;
-            document.getElementById('confirmed-name').innerText = shippingDetails.name || 'Guest';
+            document.getElementById('confirmed-name').innerText = payerName || shippingDetails.name || 'Guest';
 
             // Clear Cart
             cart = [];
